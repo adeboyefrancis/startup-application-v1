@@ -1,0 +1,76 @@
+name: Create AMI for EC2 instance for Start-up Application in Development account
+
+on:
+  release:
+    types: [published]  # This workflow runs only when a release is created
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  PACKER_AMI_DEPLOY: ${{ secrets.PACKER_AMI_DEPLOY }}
+  DEVELOPMENT_VPC_ID: ${{ secrets.DEVELOPMENT_VPC_ID }}
+  DEVELOPMENT_SUBNET_ID: ${{ secrets.DEVELOPMENT_SUBNET_ID }}
+  PACKER_VERSION: "latest"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  packer:
+    runs-on: ubuntu-latest  # Runs packer on latest ubuntu runner
+    name: Run Packer
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Set up Packer with the latest release
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: ${{ env.PACKER_VERSION }}  
+      
+      # Initialize Packer
+      - name: Run `packer init`
+        id: init
+        run: "packer init ./vm-ec2-image.pkr.hcl" 
+      
+      # Format to align packer template
+      - name: Run `packer fmt`
+        id: fmt
+        run: "packer fmt ./vm-ec2-image.pkr.hcl"  
+
+      # Validate Packer template
+      - name: Run `packer validate`   
+        id: validate
+        run: "packer validate ./vm-ec2-image.pkr.hcl"
+
+      # Assume Created Role to deploy AMI in Development Account
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.PACKER_AMI_DEPLOY }}
+        
+      # Cat the DB secrets to the secrets.sh in GitHub Workspace and add Execution to file
+      - name: Create DB secrets file
+        run: |
+          cat > $GITHUB_WORKSPACE/secrets.sh << 'EOF'
+          #!/bin/bash
+          export SECRET_KEY='${{ secrets.SECRET_KEY }}'
+          export DB_USER='${{ secrets.DB_USER }}'
+          export DB_PASSWORD='${{ secrets.DB_PASSWORD }}'
+          EOF
+          chmod +x $GITHUB_WORKSPACE/secrets.sh
+
+      # Build AMI Image using Packer
+      - name: Run `packer build`
+        id: build
+        run: |
+          packer build -color=false -on-error=abort \
+          -var "vpc_id=${{ secrets.DEVELOPMENT_VPC_ID }}" \
+          -var "subnet_id=${{ secrets.DEVELOPMENT_SUBNET_ID }}" \
+          -var "version=${{ github.event.release.tag_name }}" \
+          ./vm-ec2-image.pkr.hcl

@@ -23,7 +23,7 @@ variable "subnet_id" {
 
 variable "version" {
   type        = string
-  default     = "v1.0.0"
+  default     = " "
   description = "AMI Release version"
 }
 
