@@ -65,7 +65,7 @@ jobs:
           EOF
           chmod +x $GITHUB_WORKSPACE/secrets.sh
 
-      # Build AMI Image using Packer
+      # Build AMI Image for Ubuntu using Packer
       - name: Run `packer build`
         id: build
         run: |
