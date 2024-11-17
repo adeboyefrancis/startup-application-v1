@@ -38,7 +38,7 @@ locals {
   region            = "eu-west-1"
   ami_name          = "start_up_application_AMI"
   source_image_name = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server*"
-  source_ami_owners = ["911167905602"]
+  source_ami_owners = ["099720109477"]
   ssh_username      = "ubuntu"
   build_name        = "startup-app-ami"
   prefix            = "tchbg"
