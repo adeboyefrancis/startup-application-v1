@@ -1,1 +1,4 @@
-.terraform
+# Terraform provider binaries
+.terraform/
+*.tfstate
+*.tfstate.*
