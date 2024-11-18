@@ -51,7 +51,7 @@ jobs:
               env:
                 TF_VAR_custom_ami_version: 'custom_ami_version=${{ inputs.ami_version }}'
               id: plan
-              run: terraform plan --no-color
+              run: terraform plan -no-color
               
 
             - name: Terraform Apply
