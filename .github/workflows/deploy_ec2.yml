@@ -7,7 +7,6 @@ on:
             description: "Custom AMI version"
             required: true
 
-
 permissions:
   id-token: write
   contents: read
@@ -25,7 +24,6 @@ jobs:
 
         outputs: 
             webapp_public_ip: ${{ steps.tf_out.outputs.ec2_ip }}
-
 
         steps:
             - name: Checkout Repository
@@ -57,10 +55,18 @@ jobs:
               id: apply
               run: terraform apply -var "custom_ami_version=${{ inputs.ami_version }}" -no-color
 
-            - name: Terraform Outputs   #Output Webserver Public IP
+            - name: Terraform Outputs
               id: tf_out
               run: |
                 echo "ec2_ip=$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
 
-
-
+            - name: Verify EC2 Deployment
+              run: |
+                ip=$(terraform output webapp_public_ip)
+                curl -f http://$ip || exit 1
+                if curl -f http://$ip; then
+                  echo "Deployment successful! EC2 instance is accessible at http://$ip"
+                else
+                  echo "Deployment verification failed"
+                  exit 1
+                fi
