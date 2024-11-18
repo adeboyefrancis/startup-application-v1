@@ -22,7 +22,7 @@ variable "region" {
 }
 
 variable "custom_ami_version" {
-  default = " "
+  default = "v1.0.0"
 
 }
 
