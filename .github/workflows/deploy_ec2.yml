@@ -54,7 +54,7 @@ jobs:
 
             - name: Terraform Apply
               id: apply
-              run: terraform apply -var 'custom_ami_version=${{ inputs.ami_version }}' -no-color
+              run: terraform apply -var 'custom_ami_version=${{ inputs.ami_version }}' -auto-approve
 
             - name: Terraform Outputs
               id: tf_out
