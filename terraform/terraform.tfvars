@@ -1,1 +1,1 @@
-custom_ami_version = " "
+custom_ami_version = "v1.0.0"
