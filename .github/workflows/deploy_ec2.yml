@@ -48,13 +48,18 @@ jobs:
               run: terraform validate -no-color
 
             - name: Terraform Plan
+              env:
+                TF_VAR_custom_ami_version: 'custom_ami_version=${{ inputs.ami_version }}'
               id: plan
-              run: terraform plan 
-              continue-on-error: true
+              run: terraform plan --no-color
+              
 
             - name: Terraform Apply
+              if: github.event_name == 'workflow_dispatch'
+              env:
+                TF_VAR_custom_ami_version: 'custom_ami_version=${{ inputs.ami_version }}'
               id: apply
-              run: terraform apply -auto-approve
+              run: terraform apply -auto-approve -no-color
 
             - name: Terraform Outputs
               id: tf_out
