@@ -39,7 +39,7 @@ resource "aws_instance" "websever-app" {
   vpc_security_group_ids      = [aws_security_group.webserver-sg.id]
 
   tags = {
-    Name    = "${var.prefix}-startup-app-${var.custom_ami_version}"
+    Name    = "${var.prefix}-webserver-app-${var.custom_ami_version}"
     Version = var.custom_ami_version 
   }
 }
@@ -50,7 +50,7 @@ resource "aws_instance" "websever-app" {
 
 resource "aws_security_group" "webserver-sg" {
   description = "Access to webserver on port 80 HTTP"
-  name        = "startup-app-sg"
+  name        = "${var.prefix}-startup-app-sg"
   vpc_id      = data.tfe_outputs.infra-connection.values.main_vpc
 
   ingress {

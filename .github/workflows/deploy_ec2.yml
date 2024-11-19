@@ -4,8 +4,9 @@ on:
   workflow_dispatch: 
     inputs: 
         custom_ami_version:
-            description: "Custom AMI version"
+            description: "Enter required custom_ami_version"
             required: true
+            type: string
 
 permissions:
   id-token: write
@@ -29,6 +30,13 @@ jobs:
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v4
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                audience: sts.amazonaws.com
+                aws-region: ${{ env.AWS_REGION }}
+                role-to-assume: ${{ secrets.PACKER_AMI_DEPLOY }}
 
 
             - name: Terraform
