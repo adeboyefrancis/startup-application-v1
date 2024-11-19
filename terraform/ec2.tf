@@ -1,14 +1,14 @@
 ####################################
 # Fetch Custom AMI created by Packer
 ####################################
-/*
+
 data "aws_ami" "custom_ami" {
   most_recent = true
   owners      = ["self"]
 
   filter {
     name   = "name"
-    values = ["start_up_application_AMI-${var.custom_ami_version}"]
+    values = ["startup-app-ami-tchbg-*"]
   }
 
   filter {
@@ -21,7 +21,7 @@ data "aws_ami" "custom_ami" {
     values = ["hvm"]
   }
 }
-*/
+
 # Fetch Outputs of Public Subnets from Infrastruction Network Connection Workspace
 data "tfe_outputs" "infra-connection" {
   organization = "touchedbyfrancisblog"
@@ -32,14 +32,14 @@ data "tfe_outputs" "infra-connection" {
 # Startup Application Virtual Machine
 #####################################
 resource "aws_instance" "websever-app" {
-  ami                         = "ami-03b772fec0c152817"
+  ami                         = data.aws_ami.custom_ami.id
   instance_type               = var.instance_type
   subnet_id                   = data.tfe_outputs.infra-connection.values.public_subnets[0]
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.webserver-sg.id]
 
   tags = {
-    Name = "${var.prefix}-startup-app"
+    Name = "${var.prefix}-startup-app-${var.custom_ami_version}"
   }
 }
 
@@ -49,7 +49,7 @@ resource "aws_instance" "websever-app" {
 
 resource "aws_security_group" "webserver-sg" {
   description = "Access to webserver on port 80 HTTP"
-  name        = "${local.prefix}-startup-app-sg"
+  name        = "startup-app-sg"
   vpc_id      = data.tfe_outputs.infra-connection.values.main_vpc
 
   ingress {
