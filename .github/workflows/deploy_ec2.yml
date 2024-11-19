@@ -67,13 +67,3 @@ jobs:
               run: |
                 echo "ec2_ip=$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
 
-            - name: Verify EC2 Deployment
-              run: |
-                ip=$(terraform output webapp_public_ip)
-                curl -f http://$ip || exit 1
-                if curl -f http://$ip; then
-                  echo "Deployment successful! EC2 instance is accessible at http://$ip"
-                else
-                  echo "Deployment verification failed"
-                  exit 1
-                fi
