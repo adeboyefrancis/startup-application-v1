@@ -40,12 +40,8 @@ locals {
   source_image_name = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server*"
   source_ami_owners = ["099720109477"]
   ssh_username      = "ubuntu"
-  build_name        = "custom-ami"
+  build_name        = "custom_ami"
   prefix            = "tchbg"
-  tags = {
-    version   = var.version
-    land_zone = "Development"
-  }
 }
 
 source "amazon-ebs" "ubuntu" {
@@ -70,7 +66,7 @@ source "amazon-ebs" "ubuntu" {
 }
 
 build {
-  name = "${local.build_name}-${local.prefix}-${var.version}"
+  name = "${local.build_name}"
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
@@ -91,6 +87,5 @@ build {
     regions       = [local.region]
     identifier    = local.ami_name
     keep_releases = 2
-    tags          = local.tags
   }
 }
