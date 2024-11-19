@@ -34,24 +34,16 @@ variable "vpc_id" {
 }
 
 locals {
-  instance_type     = "t2.micro"
-  region            = "eu-west-1"
-  ami_name          = "start_up_application_AMI"
+  ami_name          = "touchedbyfrancis"
   source_image_name = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server*"
   source_ami_owners = ["099720109477"]
   ssh_username      = "ubuntu"
-  build_name        = "startup-app-ami"
-  prefix            = "tchbg"
-  tags = {
-    version   = var.version
-    land_zone = "Development"
-  }
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "${local.ami_name}-${local.prefix}-${var.version}"
-  instance_type = local.instance_type
-  region        = local.region
+  ami_name      = "${local.ami_name}-${var.version}"
+  instance_type = "t2.micro"
+  region        = "eu-west-1"
 
   source_ami_filter {
     filters = {
@@ -70,7 +62,7 @@ source "amazon-ebs" "ubuntu" {
 }
 
 build {
-  name = "${local.build_name}-${local.prefix}-${var.version}"
+  name = "startup_app_ami"
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
