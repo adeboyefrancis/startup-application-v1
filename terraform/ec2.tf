@@ -37,10 +37,11 @@ resource "aws_instance" "websever-app" {
   subnet_id                   = data.tfe_outputs.infra-connection.values.public_subnets[0]
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.webserver-sg.id]
+  iam_instance_profile        = aws_iam_instance_profile.ec2_instance_profile.name
 
   tags = {
     Name    = "${var.prefix}-webserver-app-${var.custom_ami_version}"
-    Version = var.custom_ami_version 
+    Version = var.custom_ami_version
   }
 }
 
