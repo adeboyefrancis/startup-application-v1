@@ -36,11 +36,11 @@ variable "vpc_id" {
 locals {
   instance_type     = "t2.micro"
   region            = "eu-west-1"
-  ami_name          = "tech-blog"
+  ami_name          = "startup-app-ami"
   source_image_name = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server*"
   source_ami_owners = ["099720109477"]
   ssh_username      = "ubuntu"
-  build_name        = "startup-app-ami"
+  build_name        = "custom-ami"
   prefix            = "tchbg"
   tags = {
     version   = var.version
