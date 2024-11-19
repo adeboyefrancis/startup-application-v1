@@ -39,7 +39,8 @@ resource "aws_instance" "websever-app" {
   vpc_security_group_ids      = [aws_security_group.webserver-sg.id]
 
   tags = {
-    Name = "${var.prefix}-startup-app-${var.custom_ami_version}"
+    Name    = "${var.prefix}-startup-app-${var.custom_ami_version}"
+    Version = var.custom_ami_version 
   }
 }
 

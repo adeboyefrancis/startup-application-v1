@@ -3,7 +3,7 @@ name: Deployment of EC2 Instance with Custom AMI
 on:
   workflow_dispatch: 
     inputs: 
-        ami_version:
+        custom_ami_version:
             description: "Custom AMI version"
             required: true
 
@@ -14,6 +14,7 @@ permissions:
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
   TF_CLOUD_API_TOKEN: ${{ secrets.TF_CLOUD_API_TOKEN }}
+  TF_VAR_custom_ami_version: ${{ inputs.custom_ami_version }}
 
 jobs:
     ec2_deploy:
@@ -49,16 +50,12 @@ jobs:
               run: terraform validate -no-color
 
             - name: Terraform Plan
-              env:
-                vars: 'custom_ami_version=${{ inputs.ami_version }}'
               id: plan
               run: terraform plan -no-color
               
 
             - name: Terraform Apply
               if: github.event_name == 'workflow_dispatch'
-              env:
-                vars: 'custom_ami_version=${{ inputs.ami_version }}'
               id: apply
               run: terraform apply -auto-approve -no-color
 
