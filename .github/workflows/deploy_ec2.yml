@@ -36,7 +36,7 @@ jobs:
               with:
                 audience: sts.amazonaws.com
                 aws-region: ${{ env.AWS_REGION }}
-                role-to-assume: ${{ secrets.PACKER_AMI_DEPLOY }}
+                
 
 
             - name: Terraform
@@ -70,6 +70,5 @@ jobs:
             - name: Terraform Outputs
               id: tf_out
               run: |
-                url=$(terraform output webapp_public_ip | tr -d '"')
-                echo "ec2_ip_url=http://$url" >> "$GITHUB_OUTPUT"
+                echo ec2_ip="http://$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
 
