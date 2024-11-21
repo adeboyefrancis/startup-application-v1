@@ -24,6 +24,7 @@ variable "region" {
 variable "custom_ami_version" {
   type = string
   description = "Custom AMI version"
+  default = "v1.0.1"
 
 }
 
