@@ -24,6 +24,9 @@ jobs:
         defaults:
              run:
               working-directory: terraform
+        
+        outputs:
+          webapp_public_ip: ${{ steps.tf_out.outputs.ec2_ip }}
 
         steps:
             - name: Checkout Repository
@@ -57,7 +60,8 @@ jobs:
               id: apply
               run: terraform apply -auto-approve
 
-            - name: Public IP Output
+            - name: Terraform Outputs
+              id: tf_out
               run: |
                 echo URL="http://$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
 
