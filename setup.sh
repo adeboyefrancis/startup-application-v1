@@ -146,7 +146,8 @@ sudo systemctl restart nginx
 #
 # Relevant link: https://codingforentrepreneurs.com/blog/hello-linux-nginx-and-ufw-firewall
 #################################################################################################
-TODO
+sudo ufw allow http
+sudo ufw enable
 
 # Print completion message
 echo "Django application setup complete!"
