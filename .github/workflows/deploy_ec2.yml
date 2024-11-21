@@ -54,7 +54,7 @@ jobs:
               
 
             - name: Terraform Apply
-              if: github.event_name == 'workflow_dispatch'
+              if: github.event_name.release.tag_name == 'workflow_dispatch'
               env:
                 vars: 'custom_ami_version=${{ inputs.ami_version }}'
               id: apply
