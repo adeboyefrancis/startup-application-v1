@@ -3,7 +3,7 @@ name: Deployment of EC2 Instance with Custom AMI
 on:
   workflow_dispatch: 
     inputs: 
-        custom_ami_version:
+        ami_version:
             description: "Enter required custom_ami_version"
             required: true
             type: string
@@ -15,7 +15,7 @@ permissions:
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
   TF_CLOUD_API_TOKEN: ${{ secrets.TF_CLOUD_API_TOKEN }}
-  TF_VAR_custom_ami_version: ${{ inputs.custom_ami_version }}
+  
 
 jobs:
     ec2_deploy:
@@ -23,9 +23,6 @@ jobs:
         defaults:
              run:
               working-directory: terraform
-
-        outputs: 
-            webapp_public_ip: ${{ steps.tf_out.outputs.ec2_ip }}
 
         steps:
             - name: Checkout Repository
@@ -50,17 +47,20 @@ jobs:
               run: terraform validate -no-color
 
             - name: Terraform Plan
+              env:
+                vars: 'custom_ami_version=${{ inputs.ami_version }}'
               id: plan
-              run: terraform plan -no-color
+              run: terraform plan -var "custom_ami_version=${{ inputs.ami_version }}"
               
 
             - name: Terraform Apply
               if: github.event_name == 'workflow_dispatch'
+              env:
+                vars: 'custom_ami_version=${{ inputs.ami_version }}'
               id: apply
-              run: terraform apply -auto-approve -no-color
+              run: terraform apply -var "custom_ami_version=${{ inputs.ami_version }}" -auto-approve
 
-            - name: Terraform Outputs
-              id: tf_out
+            - name: Public IP Output
               run: |
-                echo ec2_ip="http://$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
+                echo URL="http://$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
 
