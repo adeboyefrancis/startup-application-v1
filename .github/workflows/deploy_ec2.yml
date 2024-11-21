@@ -70,5 +70,5 @@ jobs:
             - name: Terraform Outputs
               id: tf_out
               run: |
-                echo "ec2_ip=$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
+                echo "ec2_ip_url="http://$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
 

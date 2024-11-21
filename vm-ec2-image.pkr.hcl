@@ -78,9 +78,15 @@ build {
 
   provisioner "shell" {
     inline = [
+      "echo creating app folder...."
       "sudo mkdir -p /opt/app",
-      "sudo mv /tmp/* /opt/app/"
+      "sudo mv /tmp/* /opt/app/",
+      "sudo chmod +x /opt/app/setup.sh"
     ]
+  }
+
+  provisioner "shell" {
+    script = "setup.sh"
   }
 
   post-processor "amazon-ami-management" {
