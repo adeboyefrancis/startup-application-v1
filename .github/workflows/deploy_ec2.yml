@@ -31,14 +31,6 @@ jobs:
             - name: Checkout Repository
               uses: actions/checkout@v4
 
-            - name: Configure AWS credentials
-              uses: aws-actions/configure-aws-credentials@v4
-              with:
-                audience: sts.amazonaws.com
-                aws-region: ${{ env.AWS_REGION }}
-                
-
-
             - name: Terraform
               uses: hashicorp/setup-terraform@v3
               with:
