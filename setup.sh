@@ -72,7 +72,7 @@ source $APP_DIR/venv/bin/activate
 #
 # Relevant link: https://realpython.com/what-is-pip/
 #################################################################################################
-sudo -E python3 -m pip install -r $APP_DIR/requirements.txt
+pip install -r $APP_DIR/requirements.txt
 
 # Apply Django migrations
 python3 $APP_DIR/manage.py makemigrations
