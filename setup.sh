@@ -64,15 +64,15 @@ sudo sed -i "s/REPLACE_DATABASE_PASSWORD/$DB_PASSWORD/g" $APP_DIR/cloudtalents/s
 #
 # Relevant link: https://www.liquidweb.com/blog/how-to-setup-a-python-virtual-environment-on-ubuntu-18-04/
 #################################################################################################
-python3 -m venv ~/app
-source ~/app/bin/activate
+python3 -m venv $APP_DIR/venv
+source $APP_DIR/venv/bin/activate
 
 #################################################################################################
 # Install the Python dependencies listed in requirements.txt
 #
 # Relevant link: https://realpython.com/what-is-pip/
 #################################################################################################
-python3 -m pip install -r $APP_DIR/requirements.txt
+sudo -E python3 -m pip install -r $APP_DIR/requirements.txt
 
 # Apply Django migrations
 python3 $APP_DIR/manage.py makemigrations

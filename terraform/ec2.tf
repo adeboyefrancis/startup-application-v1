@@ -61,6 +61,15 @@ resource "aws_security_group" "webserver-sg" {
     protocol    = "tcp"
   }
 
+  #DMS Inbound Traffic for Replication
+    ingress {
+    security_groups = [aws_security_group.dms_sg.id]
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+  }
+
+
   egress {
     cidr_blocks = ["0.0.0.0/0"]
     from_port   = 0

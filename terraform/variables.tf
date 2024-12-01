@@ -31,3 +31,19 @@ variable "custom_ami_version" {
 variable "instance_type" {
   default = "t2.micro"
 }
+
+variable "db_username" {
+  type = string
+  sensitive = true
+  
+}
+variable "db_password" {
+  type        = string
+  sensitive   = true
+}
+
+
+variable "s3_name" {
+  type = string
+  default = "rds-s3-image"
+}
