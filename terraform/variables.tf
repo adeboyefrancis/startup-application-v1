@@ -45,5 +45,17 @@ variable "db_password" {
 
 variable "s3_name" {
   type = string
-  default = "rds-s3-image"
+}
+
+
+variable "secret_key" {
+  type = string
+}
+
+variable "db_endpoint" {
+  type = string
+}
+
+variable "cfd_domain" {
+  type = string
 }

@@ -54,6 +54,17 @@
           "s3:DeleteObject"
         ],
         "Resource" : "*"
+      },
+
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ssm:GetParameters",
+          "ssm:DescribeParameters"
+        ],
+        "Resource" : "*"
+
+
       }
     ]
   }
