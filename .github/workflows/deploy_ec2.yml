@@ -60,8 +60,8 @@ jobs:
               id: apply
               run: terraform apply -auto-approve
 
-            - name: Terraform Outputs
-              id: tf_out
-              run: |
-                echo "ec2_ip=$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
+          # - name: Terraform Outputs
+          #   id: tf_out
+          #   run: |
+          #     echo "ec2_ip=$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
 
