@@ -77,8 +77,7 @@ resource "aws_security_group" "dms_sg" {
 
 
 # Source Endpoint -> EC2 Instance
-
-resource "aws_dms_endpoint" "ec2_endpoint" {
+/*resource "aws_dms_endpoint" "ec2_endpoint" {
   database_name               = "mvp"
   endpoint_id                 = "startup-webserver-app"
   endpoint_type               = "source"
@@ -94,7 +93,7 @@ resource "aws_dms_endpoint" "ec2_endpoint" {
 
   username = var.db_username
 }
-
+*/
 
 
 # Target Endpoint -> RDS (PostgreSQL)
@@ -121,7 +120,7 @@ resource "aws_dms_endpoint" "rds_endpoint" {
 # DMS Task
 
 # Create a new replication task
-resource "aws_dms_replication_task" "dms_task" {
+/*resource "aws_dms_replication_task" "dms_task" {
   migration_type            = "full-load"
   replication_instance_arn  = aws_dms_replication_instance.dms_rep_instance.replication_instance_arn
   replication_task_id       = "replication-task-1"
@@ -133,3 +132,4 @@ resource "aws_dms_replication_task" "dms_task" {
   }
   target_endpoint_arn = aws_dms_endpoint.rds_endpoint.endpoint_arn
 }
+*/
