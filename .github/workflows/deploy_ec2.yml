@@ -1,8 +1,8 @@
 name: Deployment of EC2 Instance with Custom AMI
 
 on:
-  workflow_dispatch: 
-    inputs: 
+  workflow_dispatch:
+    inputs:
         custom_ami_version:
             description: "Enter required custom_ami_version"
             required: true
@@ -16,7 +16,6 @@ env:
   AWS_REGION: ${{ vars.AWS_REGION }}
   TF_CLOUD_API_TOKEN: ${{ secrets.TF_CLOUD_API_TOKEN }}
   TF_VAR_custom_ami_version: ${{ inputs.custom_ami_version }}
-  
 
 jobs:
     ec2_deploy:
@@ -24,7 +23,7 @@ jobs:
         defaults:
              run:
               working-directory: terraform
-        
+
         outputs:
           webapp_public_ip: ${{ steps.tf_out.outputs.ec2_ip }}
 
@@ -53,10 +52,9 @@ jobs:
             - name: Terraform Plan
               id: plan
               run: terraform plan -no-color
-              
 
             - name: Terraform Apply
-              if: github.event_name.release.tag_name == 'workflow_dispatch'
+              if: github.event_name == 'workflow_dispatch'
               id: apply
               run: terraform apply -auto-approve
 
@@ -64,4 +62,3 @@ jobs:
           #   id: tf_out
           #   run: |
           #     echo "ec2_ip=$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
-
