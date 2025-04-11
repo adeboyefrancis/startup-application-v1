@@ -31,6 +31,7 @@ resource "aws_iam_role_policy_attachment" "dms-vpc-role-AmazonDMSVPCManagementRo
 
 # Create a new replication instance
 resource "aws_dms_replication_instance" "dms_rep_instance" {
+  count = 0
   allocated_storage            = 10
   apply_immediately            = true
   multi_az                     = false
