@@ -7,48 +7,61 @@ on:
             description: "Enter required custom_ami_version"
             required: true
 
-
 permissions:
   id-token: write
   contents: read
 
-  
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  TF_CLOUD_API_TOKEN: ${{ secrets.TF_CLOUD_API_TOKEN }}
+
 jobs:
-    ec2_deploy:
-        name: ec2_deploy
-        runs-on: ubuntu-latest
-        defaults:
-            run:
-              working-directory: terraform
-        steps:
+  ec2_deploy:
+    name: ec2_deploy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
 
-            - name: Checkout Repository
-              uses: actions/checkout@v4
+    outputs:
+      webapp_public_ip: ${{ steps.tf_out.outputs.ec2_ip }}
 
-            - name: Set up Terraform
-              uses: hashicorp/setup-terraform@v3
-              with:
-                terraform_version: "1.9.8"
-                cli_config_credentials_token: ${{ secrets.TF_CLOUD_API_TOKEN }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-            - name: Create terraform.auto.tfvars
-              run: |
-                echo "custom_ami_version = \"${{ github.event.inputs.custom_ami_version }}\"" > terraform.auto.tfvars
+      - name: Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+          cli_config_credentials_token: ${{ secrets.TF_CLOUD_API_TOKEN }}
 
-            - name: Terraform Init
-              id: init
-              run: terraform init
+      - name: Create terraform.auto.tfvars
+        run: |
+          echo "custom_ami_version = \"${{ github.event.inputs.custom_ami_version }}\"" > terraform.auto.tfvars
 
-            - name: Terraform Plan
-              id: plan
-              run: terraform plan -no-color
-              continue-on-error: true
+      - name: Terraform Init
+        id: init
+        run: terraform init
 
-            - name: Terraform Apply
-              id: Apply
-              run: terraform apply -auto-approve -no-color
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt
 
-          # - name: Terraform Outputs
-          #   id: tf_out
-          #   run: |
-          #     echo "ec2_ip=$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+
+      - name: Terraform Apply
+        if: github.event_name == 'workflow_dispatch'
+        id: apply
+        run: terraform apply -auto-approve
+
+      # - name: Terraform Outputs
+      #   id: tf_out
+      #   run: |
+      #     echo "ec2_ip=$(terraform output webapp_public_ip | tr -d '""')" >> "$GITHUB_OUTPUT"
