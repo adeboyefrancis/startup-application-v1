@@ -51,11 +51,3 @@ variable "s3_name" {
 variable "secret_key" {
   type = string
 }
-
-variable "db_endpoint" {
-  type = string
-}
-
-variable "cfd_domain" {
-  type = string
-}

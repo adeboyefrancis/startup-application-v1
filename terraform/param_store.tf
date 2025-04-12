@@ -21,17 +21,17 @@ resource "aws_ssm_parameter" "db_password" {
 resource "aws_ssm_parameter" "rds_endpoint" {
   name        = "/cloudtalents/startup/database_endpoint"
   type        = "String"
-  value       = var.db_endpoint
+  value       = aws_db_instance.rds_app_db.address
 }
 
 resource "aws_ssm_parameter" "s3_rds_bucket" {
   name        = "/cloudtalents/startup/image_storage_bucket_name"
   type        = "String"
-  value       = var.s3_name
+  value       = aws_s3_bucket.s3-image-bucket.id
 }
 
 resource "aws_ssm_parameter" "cfd_image_domain" {
   name        = "/cloudtalents/startup/image_storage_cloudfront_domain"
   type        = "String"
-  value       = var.cfd_domain
+  value       = aws_cloudfront_distribution.cf_s3_distribution.domain_name
 }
