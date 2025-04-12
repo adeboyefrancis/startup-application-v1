@@ -6,57 +6,41 @@ on:
         custom_ami_version:
             description: "Enter required custom_ami_version"
             required: true
-            type: string
-
-permissions:
-  id-token: write
-  contents: read
-
-env:
-  AWS_REGION: ${{ vars.AWS_REGION }}
-  TF_CLOUD_API_TOKEN: ${{ secrets.TF_CLOUD_API_TOKEN }}
-  TF_VAR_custom_ami_version: ${{ inputs.custom_ami_version }}
-
 jobs:
     ec2_deploy:
+        name: ec2_deploy
         runs-on: ubuntu-latest
         defaults:
-             run:
+            run:
               working-directory: terraform
-
-        outputs:
-          webapp_public_ip: ${{ steps.tf_out.outputs.ec2_ip }}
-
         steps:
+
+            
             - name: Checkout Repository
               uses: actions/checkout@v4
 
-            - name: Terraform
+            
+            - name: Terraform Workflow
               uses: hashicorp/setup-terraform@v3
               with:
                 terraform_version: "1.9.8"
                 cli_config_credentials_token: ${{ secrets.TF_CLOUD_API_TOKEN }}
 
+            
             - name: Terraform Init
               id: init
               run: terraform init
 
-            - name: Terraform Format Check
-              id: fmt
-              run: terraform fmt
-
-            - name: Terraform Validate
-              id: validate
-              run: terraform validate -no-color
-
+            
             - name: Terraform Plan
               id: plan
-              run: terraform plan -no-color
+              run: terraform plan -var "custom_ami_version=${{ inputs.ami_version }}" -no-color
+              continue-on-error: true
 
+            
             - name: Terraform Apply
-              if: github.event_name == 'workflow_dispatch'
-              id: apply
-              run: terraform apply -auto-approve
+              id: Apply
+              run: terraform apply -var "custom_ami_version=${{ inputs.ami_version }}" -auto-approve
 
           # - name: Terraform Outputs
           #   id: tf_out

@@ -8,7 +8,7 @@ data "aws_ami" "custom_ami" {
 
   filter {
     name   = "name"
-    values = ["startup-app-ami-tchbg-*"]
+    values = ["startup-app-ami-tchbg-${var.custom_ami_version}"]
   }
 
   filter {
