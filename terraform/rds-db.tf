@@ -13,7 +13,7 @@ resource "aws_db_instance" "rds_app_db" {
   allocated_storage    = 10
   db_name              = "mvp"
   engine               = "postgres"
-  engine_version       = "16.3"
+  engine_version       = "16.4"
   instance_class       = "db.t3.micro"
   username             = var.db_username
   password             = var.db_password

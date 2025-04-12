@@ -78,7 +78,7 @@ resource "aws_security_group" "dms_sg" {
 
 
 # Source Endpoint -> EC2 Instance
-resource "aws_dms_endpoint" "ec2_endpoint" {
+/*resource "aws_dms_endpoint" "ec2_endpoint" {
   database_name               = "mvp"
   endpoint_id                 = "startup-webserver-app"
   endpoint_type               = "source"
@@ -94,7 +94,7 @@ resource "aws_dms_endpoint" "ec2_endpoint" {
 
   username = var.db_username
 }
-
+*/
 
 
 # Target Endpoint -> RDS (PostgreSQL)
