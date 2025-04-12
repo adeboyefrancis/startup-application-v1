@@ -6,6 +6,13 @@ on:
         custom_ami_version:
             description: "Enter required custom_ami_version"
             required: true
+
+
+permissions:
+  id-token: write
+  contents: read
+
+  
 jobs:
     ec2_deploy:
         name: ec2_deploy
